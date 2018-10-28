@@ -1,11 +1,9 @@
 package com.pinyougou.pojo;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
+//使用了通用Mapper则在使用了该实体的使用对应操作注解中指定的表名称
 @Table(name = "tb_brand")
 public class TbBrand implements Serializable {
 
