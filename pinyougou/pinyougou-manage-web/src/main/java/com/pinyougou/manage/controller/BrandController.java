@@ -19,6 +19,26 @@ public class BrandController {
     @Reference
     private BrandService brandService;
 
+    /**
+     * 根据分页参数和查询条件查询品牌数据
+     * @param brand 查询条件
+     * @param page 页号
+     * @param rows 页大小
+     * @return 分页对象
+     */
+    @PostMapping("/search")
+    public PageResult search(@RequestBody TbBrand brand,
+                             @RequestParam(defaultValue = "1")Integer page,
+                             @RequestParam(defaultValue = "10")Integer rows){
+        return brandService.search(brand, page, rows);
+    }
+
+
+    /**
+     * 根据品牌id数组批量删除品牌
+     * @param ids 品牌id数组
+     * @return 操作结果
+     */
     @GetMapping("/delete")
     public Result delete(Long[] ids){
 
