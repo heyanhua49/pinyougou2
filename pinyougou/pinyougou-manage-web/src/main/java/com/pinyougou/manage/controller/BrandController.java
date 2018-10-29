@@ -20,6 +20,33 @@ public class BrandController {
     private BrandService brandService;
 
     /**
+     * 根据品牌id查询品牌数据
+     * @param id 品牌id
+     * @return 品牌数据
+     */
+    @GetMapping("/findOne")
+    public TbBrand findOne(Long id){
+        return brandService.findOne(id);
+    }
+
+    /**
+     * 根据品牌id将品牌更新到数据库中
+     * @param brand 品牌
+     * @return 操作结果
+     */
+    @PostMapping("/update")
+    public Result update(@RequestBody TbBrand brand){
+        try {
+            brandService.update(brand);
+            //return new Result(true, "新增品牌成功");
+            return Result.ok("更新品牌成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail("更新品牌失败");
+    }
+
+    /**
      * 将品牌保存到数据库中
      * @RequestBody 利用springmMVC的消息转换器将前端传递的json格式字符串
      * 转换为java对象
