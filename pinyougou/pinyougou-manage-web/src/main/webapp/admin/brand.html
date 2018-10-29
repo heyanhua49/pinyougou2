@@ -87,6 +87,47 @@
                 });
             };
 
+            //当前选中了的那些id数组
+            $scope.selectedIds = [];
+
+            //复选框点击事件
+            $scope.updateSelection = function ($event, id) {
+
+                if($event.target.checked){
+                    //当选中某个品牌的时候，应该将该品牌的id加入数组
+                    $scope.selectedIds.push(id);
+                } else {
+                    //如果反选某个已经选中的品牌复选框的时候，应该将该品牌id从数组删除
+                    //先查询id在数组中的索引号
+                    var index = $scope.selectedIds.indexOf(id);
+                    //使用splic方法删除对应索引号的元素，删除个数为1
+                    $scope.selectedIds.splice(index, 1);
+                }
+            };
+
+            //删除
+            $scope.delete = function () {
+                //判断是否选择了
+                if($scope.selectedIds.length == 0){
+                    alert("请先选择要删除的记录");
+                    return;
+                }
+
+                //如果点击了 确定 则返回true；否则false
+                if(confirm("确定要删除选中的那些记录吗？")){
+                    $http.get("../brand/delete.do?ids=" + $scope.selectedIds).success(function (response) {
+                        if(response.success){
+                            $scope.reloadList();
+                            //将已选择的id清空
+                            $scope.selectedIds = [];
+                        } else {
+                            alert(response.message);
+                        }
+                    });
+                }
+
+            };
+
         });
     </script>
 
@@ -108,8 +149,9 @@
             <div class="form-group form-inline">
                 <div class="btn-group">
                     <button type="button" class="btn btn-default" title="新建" ng-click="entity={}" data-toggle="modal" data-target="#editModal"><i class="fa fa-file-o"></i> 新建</button>
-                    <button type="button" class="btn btn-default" title="删除"><i class="fa fa-trash-o"></i> 删除</button>
+                    <button type="button" class="btn btn-default" ng-click="delete()" title="删除"><i class="fa fa-trash-o"></i> 删除</button>
                     <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
+                    {{selectedIds}}
                 </div>
             </div>
         </div>
@@ -136,7 +178,7 @@
             </thead>
             <tbody>
             <tr ng-repeat="entity in list">
-                <td><input type="checkbox"></td>
+                <td><input type="checkbox" ng-click="updateSelection($event, entity.id)"></td>
                 <td>{{entity.id}}</td>
                 <td>{{entity.name}}</td>
                 <td>{{entity.firstChar}}</td>
@@ -165,7 +207,6 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h3 id="myModalLabel">品牌编辑</h3>
-                {{entity}}
             </div>
             <div class="modal-body">
                 <table class="table table-bordered table-striped" width="800px">

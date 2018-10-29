@@ -19,6 +19,19 @@ public class BrandController {
     @Reference
     private BrandService brandService;
 
+    @GetMapping("/delete")
+    public Result delete(Long[] ids){
+
+        try {
+            brandService.deleteByIds(ids);
+            return Result.ok("删除成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Result.fail("删除失败");
+    }
+
     /**
      * 根据品牌id查询品牌数据
      * @param id 品牌id
