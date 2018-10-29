@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.sellergoods.service.BrandService;
 import com.pinyougou.vo.PageResult;
+import com.pinyougou.vo.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,25 @@ public class BrandController {
     //从注册中心返回一个代理对象
     @Reference
     private BrandService brandService;
+
+    /**
+     * 将品牌保存到数据库中
+     * @RequestBody 利用springmMVC的消息转换器将前端传递的json格式字符串
+     * 转换为java对象
+     * @param brand 品牌
+     * @return 操作结果
+     */
+    @PostMapping("/add")
+    public Result add(@RequestBody TbBrand brand){
+        try {
+            brandService.add(brand);
+            //return new Result(true, "新增品牌成功");
+            return Result.ok("新增品牌成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail("新增品牌失败");
+    }
 
     /**
      * 根据分页信息查询品牌列表
