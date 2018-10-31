@@ -54,8 +54,13 @@ public class SpecificationController {
         return specificationService.findOne(id);
     }
 
+    /**
+     * 根据规格id更新规格及其对应的规格选项列表
+     * @param specification 最新规格及其对应的规格选项列表
+     * @return 操作结果
+     */
     @PostMapping("/update")
-    public Result update(@RequestBody TbSpecification specification) {
+    public Result update(@RequestBody Specification specification) {
         try {
             specificationService.update(specification);
             return Result.ok("修改成功");
