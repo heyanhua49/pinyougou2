@@ -24,11 +24,12 @@ public class SpecificationServiceImpl extends BaseServiceImpl<TbSpecification> i
     public PageResult search(Integer page, Integer rows, TbSpecification specification) {
         PageHelper.startPage(page, rows);
 
+        //select * from tb_specification
         Example example = new Example(TbSpecification.class);
         Example.Criteria criteria = example.createCriteria();
-        /*if(!StringUtils.isEmpty(specification.get***())){
-            criteria.andLike("***", "%" + specification.get***() + "%");
-        }*/
+        if(!StringUtils.isEmpty(specification.getSpecName())){
+            criteria.andLike("specName", "%" + specification.getSpecName() + "%");
+        }
 
         List<TbSpecification> list = specificationMapper.selectByExample(example);
         PageInfo<TbSpecification> pageInfo = new PageInfo<>(list);
