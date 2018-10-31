@@ -107,7 +107,7 @@ public class BrandController {
     @GetMapping("/findPage")
     public PageResult findPage(@RequestParam(defaultValue = "1") Integer page,
                                @RequestParam(defaultValue = "10") Integer rows){
-        return brandService.findByPage(page, rows);
+        return brandService.findPage(page, rows);
     }
 
 
@@ -120,7 +120,7 @@ public class BrandController {
     @GetMapping("/testPage")
     public List<TbBrand> testPage(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "20") Integer rows){
         //return brandService.testPage(page, rows);
-        return (List<TbBrand>) brandService.findByPage(page, rows).getRows();
+        return (List<TbBrand>) brandService.findPage(page, rows).getRows();
     }
 
     /**

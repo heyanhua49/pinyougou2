@@ -65,6 +65,6 @@ public class BrandServiceImpl extends BaseServiceImpl<TbBrand> implements BrandS
         PageInfo<TbBrand> pageInfo = new PageInfo<>(list);
 
         //返回分页对象
-        return new PageResult(pageInfo.getList(), pageInfo.getTotal());
+        return new PageResult(pageInfo.getTotal(), pageInfo.getList());
     }
 }

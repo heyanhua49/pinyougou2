@@ -18,10 +18,10 @@ public interface BaseService<T> {
     List<T> findByWhere(T t);
 
     //分页查询
-    PageResult findByPage(Integer pageNo, Integer rows);
+    PageResult findPage(Integer pageNo, Integer rows);
 
     //分页条件查询
-    PageResult findByPage(Integer pageNo, Integer rows, T t);
+    PageResult findPage(Integer pageNo, Integer rows, T t);
 
     //新增
     void add(T t);

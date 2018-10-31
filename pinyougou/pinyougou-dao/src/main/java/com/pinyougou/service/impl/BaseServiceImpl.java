@@ -31,7 +31,7 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
-    public PageResult findByPage(Integer pageNo, Integer rows) {
+    public PageResult findPage(Integer pageNo, Integer rows) {
         //设置分页
         PageHelper.startPage(pageNo, rows);
         //查询；该list是继承了Page的
@@ -40,11 +40,11 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
         //转换为一个分页信息对象
         PageInfo<T> pageInfo = new PageInfo<>(list);
 
-        return new PageResult(pageInfo.getList(), pageInfo.getTotal());
+        return new PageResult(pageInfo.getTotal(), pageInfo.getList());
     }
 
     @Override
-    public PageResult findByPage(Integer pageNo, Integer rows, T t) {
+    public PageResult findPage(Integer pageNo, Integer rows, T t) {
         //设置分页
         PageHelper.startPage(pageNo, rows);
         //查询；该list是继承了Page的
@@ -53,7 +53,7 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
         //转换为一个分页信息对象
         PageInfo<T> pageInfo = new PageInfo<>(list);
 
-        return new PageResult(pageInfo.getList(), pageInfo.getTotal());
+        return new PageResult(pageInfo.getTotal(), pageInfo.getList());
     }
 
     @Override
