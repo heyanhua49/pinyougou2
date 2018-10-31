@@ -15,4 +15,11 @@ public interface SpecificationService extends BaseService<TbSpecification> {
      * @param specification 规格及选项列表
      */
     void add(Specification specification);
+
+    /**
+     * 根据规格id查询规格及其对应的规格选项列表
+     * @param id 规格id
+     * @return 规格及其对应的规格选项列表
+     */
+    Specification findOne(Long id);
 }

@@ -58,4 +58,26 @@ public class SpecificationServiceImpl extends BaseServiceImpl<TbSpecification> i
             }
         }
     }
+
+    @Override
+    public Specification findOne(Long id) {
+        Specification specification = new Specification();
+
+        //1、根据规格id查询规格
+        specification.setSpecification(specificationMapper.selectByPrimaryKey(id));
+
+        //2、根据规格id查询规格选项列表
+        //select * from tb_specification_option where spec_id = ?
+        //创建查询条件
+        TbSpecificationOption param = new TbSpecificationOption();
+        param.setSpecId(id);
+
+        //根据条件查询
+        List<TbSpecificationOption> specificationOptionList = specificationOptionMapper.select(param);
+
+        //设置返回列表
+        specification.setSpecificationOptionList(specificationOptionList);
+
+        return specification;
+    }
 }
