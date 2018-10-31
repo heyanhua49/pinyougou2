@@ -71,7 +71,7 @@ app.controller("typeTemplateController", function ($scope, $controller, typeTemp
 
     };
 
-    //查询品牌列表
+    //查询品牌列表；最终的数据如：{data:[{id:'1',text:'联想'},{id:'2',text:'华为'}]}
     $scope.brandList = {data:[]};//初始化
     $scope.findBrandList = function(){
         brandService.selectOptionList().success(function (response) {
@@ -79,7 +79,7 @@ app.controller("typeTemplateController", function ($scope, $controller, typeTemp
         });
     };
 
-    //查询规格列表
+    //查询规格列表；最终的数据如：{data:[{id:'1',text:'内存'},{id:'2',text:'尺寸'}]}
     $scope.specificationList = {data:[]};//初始化
     $scope.findSpecificationList = function(){
         specificationService.selectOptionList().success(function (response) {
