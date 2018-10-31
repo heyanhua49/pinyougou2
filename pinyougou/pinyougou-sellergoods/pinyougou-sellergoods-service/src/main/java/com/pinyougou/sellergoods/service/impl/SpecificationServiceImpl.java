@@ -17,6 +17,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Service(interfaceClass = SpecificationService.class)
 public class SpecificationServiceImpl extends BaseServiceImpl<TbSpecification> implements SpecificationService {
@@ -121,5 +122,10 @@ public class SpecificationServiceImpl extends BaseServiceImpl<TbSpecification> i
         criteria.andIn("specId", Arrays.asList(ids));
 
         specificationOptionMapper.deleteByExample(example);
+    }
+
+    @Override
+    public List<Map<String, Object>> selectOptionList() {
+        return specificationMapper.selectOptionList();
     }
 }
