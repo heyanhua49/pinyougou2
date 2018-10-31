@@ -34,4 +34,22 @@ app.controller("baseController", function ($scope) {
         }
     };
 
+    //将一个json列表字符串的某个属性对应的值获取并返回（使用，隔开）
+    $scope.jsonToString = function (jsonLisStr, key) {
+        var str = "";
+        //将字符串转换为一个集合
+        var jsonArray = JSON.parse(jsonLisStr);
+        for (var i = 0; i < jsonArray.length; i++) {
+            var jsonObj = jsonArray[i];
+
+            if(str.length > 0){
+                str += "," + jsonObj[key];
+            } else {
+                str = jsonObj[key];
+            }
+        }
+        return str;
+
+    };
+
 });

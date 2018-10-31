@@ -36,7 +36,7 @@ app.controller("typeTemplateController", function ($scope, $controller, typeTemp
     $scope.findOne = function (id) {
         typeTemplateService.findOne(id).success(function (response) {
             $scope.entity = response;
-            //转换品牌列表
+            //转换品牌列表；将返回的json字符串转换为一个js对象
             $scope.entity.brandIds = JSON.parse($scope.entity.brandIds);
             //转换规格列表
             $scope.entity.specIds = JSON.parse($scope.entity.specIds);
