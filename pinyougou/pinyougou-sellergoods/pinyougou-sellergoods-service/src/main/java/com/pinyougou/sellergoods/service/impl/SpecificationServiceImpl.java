@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service(interfaceClass = SpecificationService.class)
@@ -104,5 +105,21 @@ public class SpecificationServiceImpl extends BaseServiceImpl<TbSpecification> i
                 specificationOptionMapper.insertSelective(specificationOption);
             }
         }
+    }
+
+    @Override
+    public void deleteSpecificationByIds(Long[] ids) {
+        //1、删除规格
+        deleteByIds(ids);
+
+        //2、删除规格id集合对应的规格选项
+        //delete from tb_specification_option where spec_id in ( ?,?..,?)
+        Example example = new Example(TbSpecificationOption.class);
+
+        Example.Criteria criteria = example.createCriteria();
+
+        criteria.andIn("specId", Arrays.asList(ids));
+
+        specificationOptionMapper.deleteByExample(example);
     }
 }
