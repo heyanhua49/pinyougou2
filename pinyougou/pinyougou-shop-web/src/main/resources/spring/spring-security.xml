@@ -54,9 +54,13 @@ http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
         <beans:property name="sellerService" ref="sellerService"/>
     </beans:bean>
 
+    <!--配置认证密码的加密算法-->
+    <beans:bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
     <!--配置认证管理器-->
     <authentication-manager>
         <authentication-provider user-service-ref="userDetailService">
+            <password-encoder ref="bcryptPasswordEncoder"/>
         </authentication-provider>
     </authentication-manager>
 
