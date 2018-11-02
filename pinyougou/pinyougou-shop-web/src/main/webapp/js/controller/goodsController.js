@@ -33,6 +33,7 @@ app.controller("goodsController", function ($scope, $controller, $location, good
             if(response.success){
                 alert(response.message);
                 //location.href = "goods.html";
+                editor.html("");
             } else {
                 alert(response.message);
             }

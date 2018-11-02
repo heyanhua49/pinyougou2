@@ -346,6 +346,7 @@
 
 	var editor;
 	KindEditor.ready(function(K) {
+	    //选取属性名称为name值为content的那些textarea
 		editor = K.create('textarea[name="content"]', {
 			allowFileManager : true
 		});
