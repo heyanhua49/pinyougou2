@@ -62,7 +62,7 @@
 						
                         <!--tab内容-->
                         <div class="tab-content">
-{{entity.goods}}
+{{entity}}
                             <!--表单内容-->
                             <div class="tab-pane active" id="home">
                                 <div class="row data-type">                                  
@@ -90,7 +90,7 @@
 		                           	  		</tr>
 		                           	  	</table>
 		                              	
-		                              </div>	                              
+		                              </div>
 		                          	  
 									
 		                           <div class="col-md-2 title">商品名称</div>
@@ -143,7 +143,6 @@
 								 <!-- 颜色图片 -->
 								 <div class="btn-group">
 					                 <button type="button" ng-click="image_entity={}" class="btn btn-default" title="新建" data-target="#uploadModal"  data-toggle="modal"  ><i class="fa fa-file-o"></i> 新建</button>
-                                     {{entity.goodsDesc.itemImages}}
 					             </div>
 								 
 								 <table class="table table-bordered table-striped table-hover dataTable">

@@ -175,7 +175,10 @@ app.controller("goodsController", function ($scope, $controller, $location, good
                 }
             });
 
-            //根据分类模板id查询其对应的规格及其规格的选项
+            //根据分类模板id查询其对应的规格及其规格的选项；结构如：[
+            // {"id":27,"text":"网络","options":[{规格选项1（optionName）},{规格选项2（optionName）}]},
+            // {"id":32,"text":"机身内存","options":[{规格选项（optionName）}]}
+            // ]
             typeTemplateService.findSpecList(newValue).success(function (response) {
                 $scope.specList = response;
             });
