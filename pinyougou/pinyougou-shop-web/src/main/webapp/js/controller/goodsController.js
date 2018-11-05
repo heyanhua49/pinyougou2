@@ -133,6 +133,7 @@ app.controller("goodsController", function ($scope, $controller, $location, good
     //读取二级商品分类列表
     $scope.$watch("entity.goods.category1Id", function (newValue, oldValue) {
         if (newValue != undefined) {
+            //根据1级商品分类查询2级商品分类
             itemCatService.findByParentId(newValue).success(function (response) {
                 $scope.itemCat2List = response;
             });
@@ -142,6 +143,7 @@ app.controller("goodsController", function ($scope, $controller, $location, good
     //读取三级商品分类列表
     $scope.$watch("entity.goods.category2Id", function (newValue, oldValue) {
         if (newValue != undefined) {
+            //根据2级商品分类查询3级商品分类
             itemCatService.findByParentId(newValue).success(function (response) {
                 $scope.itemCat3List = response;
             });
@@ -151,6 +153,7 @@ app.controller("goodsController", function ($scope, $controller, $location, good
     //当选择三级分类后，查询对应的分类模板id
     $scope.$watch("entity.goods.category3Id", function (newValue, oldValue) {
         if (newValue != undefined) {
+            //当选择了3级商品分类的时候，根据该分类id查询完整的商品分类，并获取其里面的typeId
             itemCatService.findOne(newValue).success(function (response) {
                 $scope.entity.goods.typeTemplateId = response.typeId;
             });
