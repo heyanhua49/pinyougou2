@@ -193,8 +193,11 @@ app.controller("goodsController", function ($scope, $controller, $location, good
         var specObj = $scope.findObjectByKeyAndValue($scope.entity.goodsDesc.specificationItems, "attributeName", specName);
         if(specObj != null) {
             if($event.target.checked){
+                //选择了选项
                 specObj.attributeValue.push(optionName);
             } else {
+                //反选选项
+                //查询规格选项在attributeValue中对应的索引号
                var optIndex = specObj.attributeValue.indexOf(optionName);
                 specObj.attributeValue.splice(optIndex, 1);
 
@@ -213,6 +216,8 @@ app.controller("goodsController", function ($scope, $controller, $location, good
     $scope.createItemList = function () {
         //初始化
         $scope.entity.itemList = [{spec:{},price:0, num:9999, status:"0",isDefault:"0"}];
+
+        //已经选择了的规格及其选项$scope.entity.goodsDesc.specificationItems
 
         for (var i = 0; i < $scope.entity.goodsDesc.specificationItems.length; i++) {
             var spec = $scope.entity.goodsDesc.specificationItems[i];
