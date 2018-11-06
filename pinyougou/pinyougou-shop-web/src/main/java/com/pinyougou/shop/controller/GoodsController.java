@@ -39,6 +39,8 @@ public class GoodsController {
         try {
             String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
             goods.getGoods().setSellerId(sellerId);
+            //未审核
+            goods.getGoods().setAuditStatus("0");
             goodsService.addGoods(goods);
             return Result.ok("增加成功");
         } catch (Exception e) {
@@ -84,6 +86,10 @@ public class GoodsController {
     @PostMapping("/search")
     public PageResult search(@RequestBody  TbGoods goods, @RequestParam(value = "page", defaultValue = "1")Integer page,
                                @RequestParam(value = "rows", defaultValue = "10")Integer rows) {
+        //获取商家id，并设置作为查询条件
+        String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        goods.setSellerId(sellerId);
         return goodsService.search(page, rows, goods);
     }
 
