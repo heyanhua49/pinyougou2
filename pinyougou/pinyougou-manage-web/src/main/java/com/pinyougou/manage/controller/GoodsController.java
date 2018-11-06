@@ -78,4 +78,30 @@ public class GoodsController {
         return goodsService.search(page, rows, goods);
     }
 
+
+    /**
+     * 根据商品spu id数组修改这些spu商品对应的审核状态
+     * @param ids 商品spu id数组
+     * @param status 审核状态
+     * @return 操作结果
+     */
+    @GetMapping("/updateStatus")
+    public Result updateStatus(Long[] ids, String status){
+        try {
+            goodsService.updateStatus(ids, status);
+
+            //审核通过则需要修改这些spu对应的sku的状态为已启用
+            if ("2".equals(status)) {
+                goodsService.updateItemStatusByGoodsIds("1", ids);
+            }
+
+            return Result.ok("更新状态成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Result.fail("更新状态失败");
+    }
+
+
 }

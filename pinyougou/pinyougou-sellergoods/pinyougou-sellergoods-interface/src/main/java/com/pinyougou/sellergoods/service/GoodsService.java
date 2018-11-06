@@ -35,4 +35,11 @@ public interface GoodsService extends BaseService<TbGoods> {
      * @param status 审核状态
      */
     void updateStatus(Long[] ids, String status);
+
+    /**
+     * 修改这些spu对应的sku的状态
+     * @param status sku的启用状态（0未启用，1已启用）
+     * @param ids 商品spu id数组
+     */
+    void updateItemStatusByGoodsIds(String status, Long[] ids);
 }
