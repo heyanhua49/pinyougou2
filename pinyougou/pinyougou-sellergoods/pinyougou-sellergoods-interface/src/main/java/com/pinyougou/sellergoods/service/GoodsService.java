@@ -21,4 +21,10 @@ public interface GoodsService extends BaseService<TbGoods> {
      * @return 商品信息（基本、描述、sku列表）
      */
     Goods findGoodsById(Long id);
+
+    /**
+     * 将前台传递到后台的商品信息（基本、描述、sku列表）更新到数据库中
+     * @param goods 商品信息（基本、描述、sku列表）
+     */
+    void updateGoods(Goods goods);
 }

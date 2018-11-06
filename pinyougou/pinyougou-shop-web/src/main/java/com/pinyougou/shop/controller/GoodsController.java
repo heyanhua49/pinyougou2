@@ -59,10 +59,24 @@ public class GoodsController {
         return goodsService.findGoodsById(id);
     }
 
+    /**
+     * 将前台传递到后台的商品信息（基本、描述、sku列表）更新到数据库中
+     * @param goods 商品信息（基本、描述、sku列表）
+     * @return 操作结果
+     */
     @PostMapping("/update")
-    public Result update(@RequestBody TbGoods goods) {
+    public Result update(@RequestBody Goods goods) {
         try {
-            goodsService.update(goods);
+            //获取原来商品
+            TbGoods oldGoods = goodsService.findOne(goods.getGoods().getId());
+            //当前登录的用户
+            String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
+            //如果商家是同一个才能修改；只能修改商家本身的商品
+            if(sellerId.equals(oldGoods.getSellerId()) && sellerId.equals(goods.getGoods().getSellerId())) {
+                goodsService.updateGoods(goods);
+            } else {
+                return Result.fail("操作非法");
+            }
             return Result.ok("修改成功");
         } catch (Exception e) {
             e.printStackTrace();
