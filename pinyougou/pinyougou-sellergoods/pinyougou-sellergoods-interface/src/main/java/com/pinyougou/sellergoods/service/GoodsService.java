@@ -14,4 +14,11 @@ public interface GoodsService extends BaseService<TbGoods> {
      * @param goods 商品vo = {goods,goodsDesc,itemList}
      */
     void addGoods(Goods goods);
+
+    /**
+     * 根据商品spu id查询商品信息（基本、描述、sku列表）
+     * @param id 商品spu id
+     * @return 商品信息（基本、描述、sku列表）
+     */
+    Goods findGoodsById(Long id);
 }
