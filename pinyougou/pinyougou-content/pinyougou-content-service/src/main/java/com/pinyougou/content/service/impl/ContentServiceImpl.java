@@ -13,6 +13,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 @Service(interfaceClass = ContentService.class)
@@ -26,6 +28,53 @@ public class ContentServiceImpl extends BaseServiceImpl<TbContent> implements Co
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Override
+    public void add(TbContent tbContent) {
+        super.add(tbContent);
+        //更新内容分类缓存中对应的内容列表
+        updateContentListInRedisByCategoryId(tbContent.getCategoryId());
+    }
+
+    /**
+     * 根据分类id删除在redis中的缓存数据
+     * @param categoryId 内容分类id
+     */
+    private void updateContentListInRedisByCategoryId(Long categoryId) {
+        redisTemplate.boundHashOps(CONTENT).delete(categoryId);
+    }
+
+    @Override
+    public void update(TbContent tbContent) {
+        //1、查询原有的内容
+        TbContent oldContent = findOne(tbContent.getId());
+
+        super.update(tbContent);
+
+        //更新新的内容对应的内容分类缓存
+        updateContentListInRedisByCategoryId(tbContent.getCategoryId());
+
+        //如果修改过内容分类则需要将原有的内容分类对应的缓存数据删除
+        if (!oldContent.getCategoryId().equals(tbContent.getCategoryId())) {
+            updateContentListInRedisByCategoryId(oldContent.getCategoryId());
+        }
+    }
+
+    @Override
+    public void deleteByIds(Serializable[] ids) {
+        //根据内容id数组查询这些内容列表；遍历没一个内容，根据这个内容对应的内容分类删除缓存
+        Example example = new Example(TbContent.class);
+        example.createCriteria().andIn("id", Arrays.asList(ids));
+
+        List<TbContent> contentList = contentMapper.selectByExample(example);
+        if (contentList != null && contentList.size() > 0) {
+            for (TbContent content : contentList) {
+                updateContentListInRedisByCategoryId(content.getCategoryId());
+            }
+        }
+
+        super.deleteByIds(ids);
+    }
 
     @Override
     public PageResult search(Integer page, Integer rows, TbContent content) {
