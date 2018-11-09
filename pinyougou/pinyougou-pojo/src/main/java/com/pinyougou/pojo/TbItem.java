@@ -73,6 +73,7 @@ public class TbItem implements Serializable {
     @Field("item_seller")
     private String seller;
 
+    //表示为一个动态域；里面的每一个key对应和动态域前缀拼接，map的值则为拼接后域的值
     @Dynamic
     @Field("item_spec_*")
     private Map<String, String> specMap;
