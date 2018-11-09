@@ -20,6 +20,7 @@ public class TbItem implements Serializable {
     @Field
     private Long id;
 
+    //映射配置在solr中的schema.xml文件中的域名；如果名字一致则可以不写具体名称
     @Field("item_title")
     private String title;
 
