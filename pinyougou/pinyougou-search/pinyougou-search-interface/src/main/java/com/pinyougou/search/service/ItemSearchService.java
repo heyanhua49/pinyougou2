@@ -18,4 +18,10 @@ public interface ItemSearchService {
      * @param itemList sku商品列表
      */
     void importItemList(List<TbItem> itemList);
+
+    /**
+     * 同步删除搜索系统中的sku商品
+     * @param goodsIdList 商品spu id 集合
+     */
+    void deleteItemsByGoodsIds(List<Long> goodsIdList);
 }
