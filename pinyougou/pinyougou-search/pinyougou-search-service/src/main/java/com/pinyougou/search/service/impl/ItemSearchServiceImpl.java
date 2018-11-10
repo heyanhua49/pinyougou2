@@ -70,7 +70,22 @@ public class ItemSearchServiceImpl implements ItemSearchService {
                 SimpleFilterQuery specFilterQuery = new SimpleFilterQuery(specCriteria);
                 query.addFilterQuery(specFilterQuery);
             }
+        }
 
+        //价格条件过滤
+        if (!StringUtils.isEmpty(searchMap.get("price"))) {
+
+            String[] prices = searchMap.get("price").toString().split("-");
+
+            Criteria startPriceCriteria = new Criteria("item_price").greaterThanEqual(prices[0]);
+            SimpleFilterQuery startPriceFilterQuery = new SimpleFilterQuery(startPriceCriteria);
+            query.addFilterQuery(startPriceFilterQuery);
+
+            if (!"*".equals(prices[1])) {
+                Criteria endPriceCriteria = new Criteria("item_price").lessThanEqual(prices[1]);
+                SimpleFilterQuery endPriceFilterQuery = new SimpleFilterQuery(endPriceCriteria);
+                query.addFilterQuery(endPriceFilterQuery);
+            }
         }
 
 
