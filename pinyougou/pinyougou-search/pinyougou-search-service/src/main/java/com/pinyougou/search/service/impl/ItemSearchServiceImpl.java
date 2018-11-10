@@ -27,6 +27,11 @@ public class ItemSearchServiceImpl implements ItemSearchService {
     public Map<String, Object> search(Map<String, Object> searchMap) {
         Map<String, Object> resultMap = new HashMap<>();
 
+        //如果搜索关键字中包含有空格的话；那么将空格替换为空
+        if (!StringUtils.isEmpty(searchMap.get("keywords"))) {
+            searchMap.put("keywords", searchMap.get("keywords").toString().replaceAll(" ", ""));
+        }
+
         //创建查询对象
         //SimpleQuery query = new SimpleQuery();
         SimpleHighlightQuery query = new SimpleHighlightQuery();
