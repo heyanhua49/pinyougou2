@@ -140,6 +140,12 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         //参数1：更新的内容也就是对应在update语句中的set
         //参数2：更新条件对应where子句
         goodsMapper.updateByExampleSelective(goods, example);
+
+        //如果审核通过则更新商品sku的状态为已启用
+        if ("2".equals(status)) {
+            updateItemStatusByGoodsIds("1", ids);
+        }
+
     }
 
     @Override
@@ -168,6 +174,16 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         //参数1：更新的内容也就是对应在update语句中的set
         //参数2：更新条件对应where子句
         goodsMapper.updateByExampleSelective(goods, example);
+    }
+
+    @Override
+    public List<TbItem> findItemListByGoodsIdsAndStatus(Long[] ids, String itemStatus) {
+        //根据spu id数组查询这些spu商品对应的已启用的sku商品列表
+        Example example = new Example(TbItem.class);
+        example.createCriteria().andIn("goodsId", Arrays.asList(ids))
+                .andEqualTo("status", itemStatus);
+
+        return itemMapper.selectByExample(example);
     }
 
     /**

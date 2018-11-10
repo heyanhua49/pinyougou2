@@ -2,6 +2,8 @@ package com.pinyougou.manage.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.TbGoods;
+import com.pinyougou.pojo.TbItem;
+import com.pinyougou.search.service.ItemSearchService;
 import com.pinyougou.sellergoods.service.GoodsService;
 import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
@@ -15,6 +17,9 @@ public class GoodsController {
 
     @Reference
     private GoodsService goodsService;
+
+    @Reference
+    private ItemSearchService itemSearchService;
 
     @RequestMapping("/findAll")
     public List<TbGoods> findAll() {
@@ -95,9 +100,12 @@ public class GoodsController {
         try {
             goodsService.updateStatus(ids, status);
 
-            //审核通过则需要修改这些spu对应的sku的状态为已启用
             if ("2".equals(status)) {
-                goodsService.updateItemStatusByGoodsIds("1", ids);
+                //同步搜索系统数据
+                //根据spu id数组查询这些spu商品对应的已启用的sku商品列表
+                List<TbItem> itemList = goodsService.findItemListByGoodsIdsAndStatus(ids, "1");
+
+                itemSearchService.importItemList(itemList);
             }
 
             return Result.ok("更新状态成功");
