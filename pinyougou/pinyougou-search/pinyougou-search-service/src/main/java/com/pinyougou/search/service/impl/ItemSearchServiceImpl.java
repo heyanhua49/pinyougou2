@@ -5,17 +5,16 @@ import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.ItemSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.solr.core.SolrTemplate;
-import org.springframework.data.solr.core.query.Criteria;
-import org.springframework.data.solr.core.query.HighlightOptions;
-import org.springframework.data.solr.core.query.SimpleHighlightQuery;
-import org.springframework.data.solr.core.query.SimpleQuery;
+import org.springframework.data.solr.core.query.*;
 import org.springframework.data.solr.core.query.result.HighlightEntry;
 import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.data.solr.core.query.result.ScoredPage;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class ItemSearchServiceImpl implements ItemSearchService {
@@ -45,6 +44,35 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         //高亮结束标签
         highlightOptions.setSimplePostfix("</font>");
         query.setHighlightOptions(highlightOptions);
+
+        //商品分类条件过滤
+        if (!StringUtils.isEmpty(searchMap.get("category"))) {
+            Criteria catCriteria = new Criteria("item_category").is(searchMap.get("category"));
+            SimpleFilterQuery catFilterQuery = new SimpleFilterQuery(catCriteria);
+            query.addFilterQuery(catFilterQuery);
+        }
+
+        //商品品牌条件过滤
+        if (!StringUtils.isEmpty(searchMap.get("brand"))) {
+            Criteria brandCriteria = new Criteria("item_brand").is(searchMap.get("brand"));
+            SimpleFilterQuery brandFilterQuery = new SimpleFilterQuery(brandCriteria);
+            query.addFilterQuery(brandFilterQuery);
+        }
+
+        //规格条件过滤
+        if (searchMap.get("spec") != null) {
+
+            Map<String, String> specMap = (Map<String, String>) searchMap.get("spec");
+
+            Set<Map.Entry<String, String>> entries = specMap.entrySet();
+            for (Map.Entry<String, String> entry : entries) {
+                Criteria specCriteria = new Criteria("item_spec_" + entry.getKey()).is(entry.getValue());
+                SimpleFilterQuery specFilterQuery = new SimpleFilterQuery(specCriteria);
+                query.addFilterQuery(specFilterQuery);
+            }
+
+        }
+
 
         //1、查询
         HighlightPage<TbItem> highlightPage = solrTemplate.queryForHighlightPage(query, TbItem.class);
