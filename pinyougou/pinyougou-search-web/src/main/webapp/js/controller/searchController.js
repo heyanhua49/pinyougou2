@@ -1,7 +1,7 @@
 app.controller("searchController", function ($scope, searchService) {
 
     //提交到后台的查询条件对象
-    $scope.searchMap = {"keywords":"","category":"","brand":"","spec":{}, "price":"", "pageNo":1, "pageSize":20};
+    $scope.searchMap = {"keywords":"","category":"","brand":"","spec":{}, "price":"", "pageNo":1, "pageSize":20, "sortField":"","sort":""};
 
     //搜索
     $scope.search = function () {
@@ -40,6 +40,14 @@ app.controller("searchController", function ($scope, searchService) {
         }
 
         $scope.searchMap.pageNo = 1;
+
+        $scope.search();
+    };
+
+    //添加排序
+    $scope.addSortField = function (field, sort) {
+        $scope.searchMap.sortField = field;
+        $scope.searchMap.sort = sort;
 
         $scope.search();
     };
