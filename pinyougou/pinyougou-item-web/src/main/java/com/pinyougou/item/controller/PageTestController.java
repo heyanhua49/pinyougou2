@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -48,6 +49,24 @@ public class PageTestController {
         if (goodsIds != null && goodsIds.length > 0) {
             for (Long goodsId : goodsIds) {
                 genHtml(goodsId);
+            }
+        }
+        return "success";
+    }
+
+    /**
+     * 商品批量删除之后；应用遍历每一个spu id，到指定路径下删除该id对应的静态页面
+     * @param goodsIds spu id数组
+     * @return 操作结果
+     */
+    @GetMapping("/deleteGoods")
+    public String deleteGoods(Long[] goodsIds){
+        if (goodsIds != null && goodsIds.length > 0) {
+            for (Long goodsId : goodsIds) {
+                File file = new File(ITEM_HTML_PATH + goodsId + ".html");
+                if (file.exists()) {
+                    file.delete();
+                }
             }
         }
         return "success";
