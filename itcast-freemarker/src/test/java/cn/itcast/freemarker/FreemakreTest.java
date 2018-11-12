@@ -5,10 +5,7 @@ import freemarker.template.Template;
 import org.junit.Test;
 
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FreemakreTest {
 
@@ -43,6 +40,9 @@ public class FreemakreTest {
 
 
         dataModel.put("goodsList", goodsList);
+        dataModel.put("today", new Date());
+
+        dataModel.put("number", 123456789L);
 
 
         //输出路径

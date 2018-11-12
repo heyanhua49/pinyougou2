@@ -6,6 +6,26 @@
 </head>
 <body>
 <br>
+内建函数<br><br>
+
+数值直接显示：${number} --- 数值字符串方式显示：${number?c}<br>
+
+日期格式化：<br>
+.now表示当前日期时间：${.now}<br>
+当前日期：${today?date}<br>
+当前时间：${today?time}<br>
+当前日期时间：${today?datetime}<br>
+格式显示日期：${today?string("yyyy年MM月dd日 HH:mm:ss")}
+<br><br>
+
+json字符串转换为Json对象<br>
+<#assign jsonStr='{"id":123,"name":"itcast"}'/>
+<#assign jsonObj=jsonStr?eval/>
+${jsonObj.id} --- ${jsonObj.name}<br/><br>
+
+
+goodsList的总记录数为:${goodsList?size}<br><br>
+
 list循环控制语句<br>
 <#list goodsList as goods>
     ${goods_index}---${goods.name}---${goods.price}<br>
