@@ -33,6 +33,9 @@ public class GoodsController {
     @Autowired
     private ActiveMQQueue itemSolrQueue;
 
+    @Autowired
+    private ActiveMQQueue itemDeleteSolrQueue;
+
     @RequestMapping("/findAll")
     public List<TbGoods> findAll() {
         return goodsService.findAll();
@@ -82,7 +85,12 @@ public class GoodsController {
             goodsService.deleteGoodsByIds(ids);
 
             //同步删除搜索系统中的商品
-            //itemSearchService.deleteItemsByGoodsIds(Arrays.asList(ids));
+            jmsTemplate.send(itemDeleteSolrQueue, new MessageCreator() {
+                @Override
+                public Message createMessage(Session session) throws JMSException {
+                    return session.createObjectMessage(ids);
+                }
+            });
 
             return Result.ok("删除成功");
         } catch (Exception e) {
