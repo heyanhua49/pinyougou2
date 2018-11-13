@@ -8,15 +8,13 @@ import com.pinyougou.sellergoods.service.GoodsService;
 import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
 import org.apache.activemq.command.ActiveMQQueue;
+import org.apache.activemq.command.ActiveMQTopic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.web.bind.annotation.*;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
-import javax.jms.TextMessage;
+import javax.jms.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +33,12 @@ public class GoodsController {
 
     @Autowired
     private ActiveMQQueue itemDeleteSolrQueue;
+
+    @Autowired
+    private ActiveMQTopic itemTopic;
+
+    @Autowired
+    private ActiveMQTopic itemDeleteTopic;
 
     @RequestMapping("/findAll")
     public List<TbGoods> findAll() {
@@ -85,18 +89,31 @@ public class GoodsController {
             goodsService.deleteGoodsByIds(ids);
 
             //同步删除搜索系统中的商品
-            jmsTemplate.send(itemDeleteSolrQueue, new MessageCreator() {
-                @Override
-                public Message createMessage(Session session) throws JMSException {
-                    return session.createObjectMessage(ids);
-                }
-            });
+            sendMQMsg(itemDeleteSolrQueue, ids);
+
+            //发送商品删除的主题消息
+            sendMQMsg(itemDeleteTopic, ids);
 
             return Result.ok("删除成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
         return Result.fail("删除失败");
+    }
+
+    /**
+     * 发送商品spu id数组到activeMQ的某个队列或者主题
+     * @param destination 队列或者主题
+     * @param ids 商品spu id数组
+     */
+    private void sendMQMsg(Destination destination, Long[] ids) {
+
+        jmsTemplate.send(destination, new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                return session.createObjectMessage(ids);
+            }
+        });
     }
 
     /**
@@ -137,6 +154,9 @@ public class GoodsController {
                         return textMessage;
                     }
                 });
+
+                //发送商品审核通过的主题消息
+                sendMQMsg(itemTopic, ids);
             }
 
             return Result.ok("更新状态成功");

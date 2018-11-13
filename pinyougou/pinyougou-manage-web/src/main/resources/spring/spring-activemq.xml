@@ -32,4 +32,14 @@
         <constructor-arg value="pyg_item_delete_solr_queue"/>
     </bean>
 
+    <!--详情系统审核商品订阅主题 -->
+    <bean id="itemTopic" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg value="pyg_item_topic"/>
+    </bean>
+
+    <!--详情系统删除商品订阅主题 -->
+    <bean id="itemDeleteTopic" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg value="pyg_item_delete_topic"/>
+    </bean>
+
 </beans>
