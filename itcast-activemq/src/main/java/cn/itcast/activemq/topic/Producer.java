@@ -40,7 +40,7 @@ public class Producer {
 		// 7. 创建消息体 使用TextMessage类型
 		TextMessage textMessage = new ActiveMQTextMessage();
 		// 设置消息的内容
-		textMessage.setText("你好！传智播客。");
+		textMessage.setText("233你好！传智播客。");
 
 		// 8. 使用消息的生产者发送消息
 		producer.send(textMessage);
