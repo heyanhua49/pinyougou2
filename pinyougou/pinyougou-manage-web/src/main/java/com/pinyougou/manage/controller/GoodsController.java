@@ -1,14 +1,22 @@
 package com.pinyougou.manage.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
 import com.pinyougou.pojo.TbGoods;
 import com.pinyougou.pojo.TbItem;
-import com.pinyougou.search.service.ItemSearchService;
 import com.pinyougou.sellergoods.service.GoodsService;
 import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
+import org.apache.activemq.command.ActiveMQQueue;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.web.bind.annotation.*;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
+import javax.jms.TextMessage;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,8 +27,11 @@ public class GoodsController {
     @Reference
     private GoodsService goodsService;
 
-    @Reference
-    private ItemSearchService itemSearchService;
+    @Autowired
+    private JmsTemplate jmsTemplate;
+
+    @Autowired
+    private ActiveMQQueue itemSolrQueue;
 
     @RequestMapping("/findAll")
     public List<TbGoods> findAll() {
@@ -71,7 +82,7 @@ public class GoodsController {
             goodsService.deleteGoodsByIds(ids);
 
             //同步删除搜索系统中的商品
-            itemSearchService.deleteItemsByGoodsIds(Arrays.asList(ids));
+            //itemSearchService.deleteItemsByGoodsIds(Arrays.asList(ids));
 
             return Result.ok("删除成功");
         } catch (Exception e) {
@@ -110,7 +121,14 @@ public class GoodsController {
                 //根据spu id数组查询这些spu商品对应的已启用的sku商品列表
                 List<TbItem> itemList = goodsService.findItemListByGoodsIdsAndStatus(ids, "1");
 
-                itemSearchService.importItemList(itemList);
+                //发送商品sku列表到activeMQ
+                jmsTemplate.send(itemSolrQueue, new MessageCreator() {
+                    @Override
+                    public Message createMessage(Session session) throws JMSException {
+                        TextMessage textMessage = session.createTextMessage(JSON.toJSONString(itemList));
+                        return textMessage;
+                    }
+                });
             }
 
             return Result.ok("更新状态成功");
