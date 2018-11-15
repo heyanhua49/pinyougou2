@@ -1,6 +1,7 @@
 app.controller("userController", function ($scope, $controller, userService) {
 
     $scope.entity = {"username":"", "password":"", "phone":""};
+
     $scope.register = function () {
         if ($scope.entity.username == "") {
             alert("请输入用户名");
@@ -26,7 +27,6 @@ app.controller("userController", function ($scope, $controller, userService) {
         });
     };
 
-    $scope.entity = {};
     $scope.sendSmsCode = function () {
         if($scope.entity.phone == null || $scope.entity.phone=="") {
             alert("请输入手机号");
