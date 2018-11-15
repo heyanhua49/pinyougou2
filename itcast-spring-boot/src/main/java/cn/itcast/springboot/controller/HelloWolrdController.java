@@ -1,4 +1,4 @@
-package cn.itcast.springboot.controll;
+package cn.itcast.springboot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -13,7 +13,7 @@ public class HelloWolrdController {
     @Autowired
     private Environment environment;
 
-    @GetMapping("/info2")
+    @GetMapping("/info")
     public String info(){
 
         return "Hello SpringBoot. " + environment.getProperty("url");
