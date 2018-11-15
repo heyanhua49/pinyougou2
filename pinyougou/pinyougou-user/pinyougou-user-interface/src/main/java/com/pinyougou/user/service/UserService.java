@@ -13,4 +13,12 @@ public interface UserService extends BaseService<TbUser> {
      * @param phone 手机号
      */
     void sendSmsCode(String phone);
+
+    /**
+     * 根据用户手机号码到redis中获取验证码与用户输入的验证码对比；如果一致则返回true并且要将redis中的验证码删除；如果不一致则返回false
+     * @param phone 手机号码
+     * @param smsCode 用户输入验证码
+     * @return true or false
+     */
+    boolean checkSmsCode(String phone, String smsCode);
 }
