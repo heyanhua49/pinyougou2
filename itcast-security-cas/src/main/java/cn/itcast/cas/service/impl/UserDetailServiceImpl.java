@@ -21,7 +21,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
         //security将认证部分的工作交由cas进行；所以密码指定为空
         return new User(username, "", authorities);
