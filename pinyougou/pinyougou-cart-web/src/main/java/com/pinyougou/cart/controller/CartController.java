@@ -66,6 +66,7 @@ public class CartController {
             } else {
                 //已登录；将商品加入到redis
                 //3、将最新的购物车列表cartList写回redis
+                cartService.saveCartListByUsername(username, cartList);
             }
             return Result.ok("加入购物车成功");
         } catch (Exception e) {
@@ -95,6 +96,9 @@ public class CartController {
                 return cookieCartList;
             } else {
                 //已登录；从redis中获取购物车数据
+                List<Cart> redisCartList = cartService.findCartListByUsername(username);
+
+                return redisCartList;
             }
         } catch (Exception e) {
             e.printStackTrace();
