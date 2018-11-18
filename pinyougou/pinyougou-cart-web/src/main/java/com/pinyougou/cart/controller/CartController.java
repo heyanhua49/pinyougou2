@@ -1,8 +1,12 @@
 package com.pinyougou.cart.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.pinyougou.cart.service.CartService;
 import com.pinyougou.common.util.CookieUtils;
 import com.pinyougou.vo.Cart;
+import com.pinyougou.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -25,12 +29,50 @@ public class CartController {
 
     //购物车数据保存在浏览器中cookie的名称
     private static final String COOKIE_CART_LIST = "PYG_CART_LIST";
+    //购物车数据保存在浏览器中cookie的有效时间；默认1天
+    private static final int COOKIE_CART_MAX_AGE = 60*60*24;
 
     @Autowired
     private HttpServletRequest request;
 
     @Autowired
     private HttpServletResponse response;
+
+    @Reference
+    private CartService cartService;
+
+    /**
+     * 登录与未登录实现购物车购买商品数量的变更
+     * @param itemId 商品sku id
+     * @param num 购买数量
+     * @return 操作结果
+     */
+    @GetMapping("/addItemToCartList")
+    public Result addItemToCartList(Long itemId, Integer num){
+        try {
+            //1、查询购物车列表cartList
+            List<Cart> cartList = findCartList();
+
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+            //2、将商品和购买数量加入到购物车列表cartList
+            cartList = cartService.addItemToCartList(cartList, itemId, num);
+
+            if ("anonymousUser".equals(username)) {
+                //没有登录；将商品加入到cookie
+                //3、将最新的购物车列表cartList写回cookie
+                CookieUtils.setCookie(request, response, COOKIE_CART_LIST, JSON.toJSONString(cartList),
+                        COOKIE_CART_MAX_AGE, true);
+            } else {
+                //已登录；将商品加入到redis
+                //3、将最新的购物车列表cartList写回redis
+            }
+            return Result.ok("加入购物车成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail("加入购物车失败");
+    }
 
     /**
      * 在登录或者未登录情况下获取用户购物车列表
