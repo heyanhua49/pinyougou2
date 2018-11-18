@@ -4,4 +4,9 @@ app.service("cartService", function ($http) {
         return $http.get("cart/getUsername.do");
 
     };
+
+    this.findCartList = function () {
+        return $http.get("cart/findCartList.do");
+
+    }
 });
