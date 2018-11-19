@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSON;
 import com.pinyougou.pojo.TbGoods;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.sellergoods.service.GoodsService;
-import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
 import org.apache.activemq.command.ActiveMQQueue;
@@ -14,10 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.jms.*;
-import java.util.Arrays;
 import java.util.List;
 
 @RequestMapping("/goods")
